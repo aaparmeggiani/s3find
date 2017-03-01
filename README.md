@@ -1,3 +1,6 @@
+## s3find
+
+A 'find' for S3 public buckets.
 
 ## Installation
 
@@ -10,13 +13,13 @@ gem 's3find'
 And then execute:
 
 ```
-    $ bundle
+$ bundle
 ```
 
 Or install it yourself as:
 
 ```
-    $ gem install s3find
+$ gem install s3find
 ```
 
 ## Usage
@@ -47,23 +50,22 @@ Options:
 Examples:
 
 ```
-s3find http://publicdata.landregistry.gov.uk.s3.amazonaws.com  -l5
+$ s3find http://publicdata.landregistry.gov.uk.s3.amazonaws.com  --limit=5
 2016-03-03 19:31:20   0 Bytes market-trend-data/
 2016-03-03 19:42:07   0 Bytes market-trend-data/additional-price-paid-data/
 2016-03-03 19:32:34   0 Bytes market-trend-data/house-price-index-data/
 2016-04-28 08:30:40    111 KB market-trend-data/house-price-index-data/Annual-Change.csv
 2016-04-28 08:30:40   2.02 MB market-trend-data/house-price-index-data/Average-Prices-SA-SM.csv
+
+$ s3find http://publicdata.landregistry.gov.uk.s3.amazonaws.com --iname=change
+2016-04-28 08:30:40    111 KB market-trend-data/house-price-index-data/Annual-Change.csv
+2016-04-28 08:30:45    112 KB market-trend-data/house-price-index-data/Monthly-Change.csv
 ```
-
-
-
-## Development
-
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
-
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/aap/s3find.
+Bug reports and pull requests are welcome through this repo.
 
+## License
+
+MIT
