@@ -26,7 +26,7 @@ RSpec.describe S3find::Base do
     expect(subject.items.count).to eq(285)
   end
 
-  it "finds all files" do
+  it "finds all if no options" do
     expect(subject.find.count).to eq(285)
   end
  

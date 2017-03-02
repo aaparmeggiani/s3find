@@ -5,7 +5,7 @@ module S3find
 
     def run
         options = {}
-        parser = OptionParser.new do |opt|
+        opt = OptionParser.new
         opt.banner = ""
         opt.separator "s3find - a find for S3 public buckets."
         opt.separator ""
@@ -15,7 +15,6 @@ module S3find
         opt.separator "   <bucket>   bucket_name or full URI ( http://bucket_name.s3.amazonaws.com )"
         opt.separator ""
         opt.separator "Options:"
-
         opt.on('-n', '--name=pattern'   , 'filters names by pattern') { |pattern| options[:name] = pattern }
         opt.on('-i', '--iname=pattern'  , 'case insensitive -n') { |pattern| options[:iname] = pattern }
         opt.on('-s', '--sort=field'     , 'sort by name | size | date') do |field| 
@@ -29,34 +28,44 @@ module S3find
         end
         opt.on('-l', '--limit=num'  , 'items to display') {|num| options[:limit] = num.to_i }
         opt.separator ""
-        opt.on('-h', '--help'       , 'displays help') { puts opt; exit }
-        opt.on('-v', '--version'    , 'displays version') { puts S3find::VERSION; exit }
+        opt.on('-h', '--help'       , 'displays help') { die(opt) }
+        opt.on('-v', '--version'    , 'displays version') { die(S3find::VERSION) }
+        opt.on(nil , '--verbose'    , 'displays extra info') { options[:verbose] = true }
         opt.separator ""
-        end
-
+        
         begin
-          parser.parse!
+          opt.parse!
         rescue OptionParser::InvalidOption, OptionParser::MissingArgument 
           abort "#{$!.to_s.capitalize}\n"                                                           
         end 
 
-        resource  = ARGV[0]
-        abort "Can't go ahead without a <bucket>" if resource.nil?
+        die(opt) if ARGV.empty?
 
+        verbose  = options[:verbose]
+        resource = bucket_address(ARGV[0]) 
+        debug(verbose, "Opening #{resource}")
+        debug(verbose, "Options #{options}")
+        
         s3 = Base.new(resource)
-        if (results = s3.find(options))
-          results.each{ |r|  puts r.to_s }
-          puts "[#{results.count}/#{s3.items.count}]"
-        else
-          puts "no results"      
-        end
+        result = s3.find(options)
+        debug(verbose, "Found #{result.count} of #{s3.items.count} items")
 
-        # if command == 'get'
-        #   landregistry.get(filename)
-        #   puts 'done!'
-        # end
+        result.each{ |r|  puts r.to_s }
 
     end
-  end  
-end
 
+    private 
+    def die(message)
+      puts message; exit
+    end
+
+    def debug(condition, message)
+      puts "> #{message}" if condition
+    end
+  
+    def bucket_address(name)
+      name.start_with?('http') ? name : "http://#{name}.s3.amazonaws.com"
+    end
+
+  end 
+end

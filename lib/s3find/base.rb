@@ -20,9 +20,12 @@ module S3find
           modified: c['LastModified'],
           etag:     c['ETag'])
       }
+    rescue
+      puts "Error: #{$!}"
     end
 
     def find(options = {})
+      return @items if @items.empty? || options.empty?
       r = @items
       r = r.select { |r| r.key.include?(options[:name]) } if options[:name]
       r = r.select { |r| r.key.downcase.include?(options[:iname]) } if options[:iname]
