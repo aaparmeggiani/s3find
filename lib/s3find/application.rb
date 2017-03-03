@@ -26,7 +26,8 @@ module S3find
           options[:sort] = {name: :key, size: :size, date: :modified}[field.to_sym]
           options[:reverse] = true
         end
-        opt.on('-l', '--limit=num'  , 'items to display') {|num| options[:limit] = num.to_i }
+        opt.on('-c', '--count'      , 'counts found items') { options[:count] = true }
+        opt.on('-l', '--limit=num'  , 'items to display') { |num| options[:limit] = num.to_i }
         opt.separator ""
         opt.on('-h', '--help'       , 'displays help') { die(opt) }
         opt.on('-v', '--version'    , 'displays version') { die(S3find::VERSION) }
@@ -50,8 +51,12 @@ module S3find
         result = s3.find(options)
         debug(verbose, "Found #{result.count} of #{s3.items.count} items")
 
-        result.each{ |r|  puts r.to_s }
-
+        if options[:count]
+          count = s3.count(result)
+          puts format("%s dirs, %s files, %s", count[:dirs], count[:files], number_to_human_size(count[:bytes]) ) 
+        else
+          result.each{ |r|  puts r.to_s }
+        end
     end
 
     private 

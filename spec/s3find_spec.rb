@@ -57,6 +57,11 @@ RSpec.describe S3find::Base do
   it "limits" do
     expect(subject.find(limit: 10).count).to eq(10)
   end
+
+  it "counts" do
+    expect(subject.count(subject.find)).to eq({dirs: 4, files: 281, bytes: 1025864342 })  
+    # count numbers for spec/test_data.xml
+  end
 end
 
 RSpec.describe S3find::Application do

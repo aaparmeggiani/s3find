@@ -35,6 +35,16 @@ module S3find
       r
     end
 
+    def count(result)
+      dirs = files = bytes = 0
+      result.each do |r|
+        dirs  += 1       if r.size == 0
+        files += 1       if r.size > 0
+        bytes += r.size  if r.size > 0
+      end  
+      { dirs: dirs, files: files, bytes: bytes }
+    end
+
     # def get(filename)
     #   download = open(END_POINT + filename)
     #   IO.copy_stream(download,  "./Downloads/#{download.base_uri.to_s.split('/')[-1]}")
