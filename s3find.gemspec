@@ -22,7 +22,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake", "~> 11.3"
   spec.add_development_dependency "rspec", "~> 3.5"
 
-  spec.add_dependency "nokogiri", "~> 1.6"
   spec.add_dependency "activesupport", "~> 4.2"
   spec.add_dependency "actionview", "~> 4.2"
 

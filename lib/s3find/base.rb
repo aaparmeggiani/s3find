@@ -1,19 +1,22 @@
 require 'open-uri'
-require 'nokogiri'
 require 'active_support/core_ext/hash'
 
 module S3find
   class Base
-    attr_reader :items
+    attr_reader :bucket_name, :bucket_uri, :items
 
     def initialize(resource)
+      @bucket_name = nil
+      @bucket_uri  = nil
       @items = []
       fetch(resource)
     end
 
     def fetch(resource)
-      doc = Nokogiri::XML(open(resource))
-      contents = Hash.from_xml(doc.to_xml)['ListBucketResult']['Contents']
+      doc = Hash.from_xml(open(endpoint(resource)))
+      @bucket_name = doc['ListBucketResult']['Name']
+      @bucket_uri  = bkt_uri(@bucket_name)
+      contents = doc['ListBucketResult']['Contents']
       contents.each{ |c| @items << Item.new(
           key:      c['Key'],
           size:     c['Size'],
@@ -35,7 +38,7 @@ module S3find
       r
     end
 
-    def count(result)
+    def count(result=[])
       dirs = files = bytes = 0
       result.each do |r|
         dirs  += 1       if r.size == 0
@@ -45,10 +48,21 @@ module S3find
       { dirs: dirs, files: files, bytes: bytes }
     end
 
-    # def get(filename)
+    # def download(uri)
     #   download = open(END_POINT + filename)
     #   IO.copy_stream(download,  "./Downloads/#{download.base_uri.to_s.split('/')[-1]}")
     # end
+
+    private
+    def endpoint(resource)
+      return resource                     if resource.start_with? 'http'
+      return resource.gsub('file://','')  if resource.start_with? 'file://'
+      return bkt_uri(resource)
+    end
+
+    def bkt_uri(name)
+      "http://#{name}.s3.amazonaws.com"
+    end
 
   end
 end

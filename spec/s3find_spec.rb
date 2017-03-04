@@ -19,10 +19,12 @@ RSpec.describe S3find::Item do
 end
 
 RSpec.describe S3find::Base do
-  subject { described_class.new('spec/test_data.xml') }
+  subject { described_class.new('file://spec/test_data.xml') }
 
   it "instantiates" do
     expect(subject).to be_instance_of(described_class)
+    expect(subject.bucket_name).to eq('publicdata.landregistry.gov.uk')
+    expect(subject.bucket_uri).to  eq('http://publicdata.landregistry.gov.uk.s3.amazonaws.com')
     expect(subject.items.count).to eq(285)
   end
 

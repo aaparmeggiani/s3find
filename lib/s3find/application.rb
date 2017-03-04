@@ -43,18 +43,23 @@ module S3find
         die(opt) if ARGV.empty?
 
         verbose  = options[:verbose]
-        resource = bucket_address(ARGV[0]) 
-        debug(verbose, "Opening #{resource}")
+        resource = ARGV[0] 
+        debug(verbose, "Opening [#{resource}]")
         debug(verbose, "Options #{options}")
         
         s3 = Base.new(resource)
+        debug(verbose, "Bucket Name = #{s3.bucket_name}")
+        debug(verbose, "Bucket URI  = #{s3.bucket_uri}")
+        
         result = s3.find(options)
         debug(verbose, "Found #{result.count} of #{s3.items.count} items")
 
         if options[:count]
           count = s3.count(result)
           puts format("%s dirs, %s files, %s", count[:dirs], count[:files], number_to_human_size(count[:bytes]) ) 
-        else
+        end
+
+        unless(options[:cont])
           result.each{ |r|  puts r.to_s }
         end
     end
@@ -68,9 +73,5 @@ module S3find
       puts "> #{message}" if condition
     end
   
-    def bucket_address(name)
-      name.start_with?('http') ? name : "http://#{name}.s3.amazonaws.com"
-    end
-
   end 
 end
