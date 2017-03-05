@@ -16,7 +16,7 @@ And then execute:
 $ bundle
 ```
 
-Or install it yourself as:
+Or install it yourself:
 
 ```
 $ gem install s3find
@@ -24,7 +24,19 @@ $ gem install s3find
 
 ## Usage
 
-### Command line wrapper
+### IRB or inside your code:
+
+```
+require 's3find''
+
+s3 = S3find::Base.new('publicdata.landregistry.gov.uk')
+result = s3.find(limit: 10)
+````
+
+With the gem installed, ```s3find_console``` will start IRB with s3find loaded.
+
+
+### Command line wrapper:
 
 ```
 $ s3find -h
