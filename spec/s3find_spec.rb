@@ -9,13 +9,18 @@ end
 RSpec.describe S3find::Item do
   let(:size)      { 10 } 
   let(:modified)  { '2017-01-01T10:11:12Z000' }
-  subject         { described_class.new(key: 'filename', size: size, modified: modified) }
+  subject         { described_class.new(key: 'some/path/filename.ext', size: size, modified: modified) }
   
   it "initializes" do
     expect(subject).to be_a(described_class)
     expect(subject.size).to eq(size.to_i)
     expect(subject.modified).to eq(Time.parse(modified))
   end
+
+  it "has a filename" do
+    expect(subject.filename).to eq('filename.ext')
+  end
+
 end
 
 RSpec.describe S3find::Base do
@@ -24,7 +29,7 @@ RSpec.describe S3find::Base do
   it "instantiates" do
     expect(subject).to be_instance_of(described_class)
     expect(subject.bucket_name).to eq('publicdata.landregistry.gov.uk')
-    expect(subject.bucket_uri).to  eq('http://publicdata.landregistry.gov.uk.s3.amazonaws.com')
+    expect(subject.bucket_uri).to  eq('http://publicdata.landregistry.gov.uk.s3.amazonaws.com/')
     expect(subject.items.count).to eq(285)
   end
 

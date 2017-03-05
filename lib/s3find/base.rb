@@ -48,10 +48,12 @@ module S3find
       { dirs: dirs, files: files, bytes: bytes }
     end
 
-    # def download(uri)
-    #   download = open(END_POINT + filename)
-    #   IO.copy_stream(download,  "./Downloads/#{download.base_uri.to_s.split('/')[-1]}")
-    # end
+    def download(item)
+      if item.size > 0
+        d = open(@bucket_uri + item.key)
+        IO.copy_stream(d, "./#{item.filename}")
+      end
+    end
 
     private
     def endpoint(resource)
@@ -61,7 +63,7 @@ module S3find
     end
 
     def bkt_uri(name)
-      "http://#{name}.s3.amazonaws.com"
+      "http://#{name}.s3.amazonaws.com/"
     end
 
   end

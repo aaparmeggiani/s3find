@@ -10,6 +10,10 @@ module S3find
       @key, @size, @modified, @etag = key, size.to_i, Time.parse(modified), etag
     end
 
+    def filename
+      @key.split('/')[-1]
+    end
+    
     def to_s
       [ 
         @modified.strftime('%F %T'), 
@@ -17,6 +21,6 @@ module S3find
         @key
       ].join(' ')
     end
-    
+
   end
 end

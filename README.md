@@ -41,25 +41,30 @@ Options:
     -i, --iname=pattern              case insensitive -n
     -s, --sort=field                 sort by name | size | date
     -r, --rsort=field                reverse sort (descending)
-    -l, --limit=num                  items to display
+    -l, --limit=num                  limits items to display
+    -c, --count                      counts found items
+        --download                   downloads found items
 
     -h, --help                       displays help
     -v, --version                    displays version
+        --verbose                    displays extra info
 ```
 
 Examples:
 
 ```
-$ s3find http://publicdata.landregistry.gov.uk.s3.amazonaws.com  --limit=5
+$ s3find publicdata.landregistry.gov.uk --limit=5 --count
 2016-03-03 19:31:20   0 Bytes market-trend-data/
 2016-03-03 19:42:07   0 Bytes market-trend-data/additional-price-paid-data/
 2016-03-03 19:32:34   0 Bytes market-trend-data/house-price-index-data/
 2016-04-28 08:30:40    111 KB market-trend-data/house-price-index-data/Annual-Change.csv
 2016-04-28 08:30:40   2.02 MB market-trend-data/house-price-index-data/Average-Prices-SA-SM.csv
+3 dirs, 2 files, 2.13 MB
 
-$ s3find http://publicdata.landregistry.gov.uk.s3.amazonaws.com --iname=change
-2016-04-28 08:30:40    111 KB market-trend-data/house-price-index-data/Annual-Change.csv
+$ s3find http://publicdata.landregistry.gov.uk.s3.amazonaws.com --iname=change -rname --count
 2016-04-28 08:30:45    112 KB market-trend-data/house-price-index-data/Monthly-Change.csv
+2016-04-28 08:30:40    111 KB market-trend-data/house-price-index-data/Annual-Change.csv
+0 dirs, 2 files, 223 KB
 ```
 
 ## Contributing
