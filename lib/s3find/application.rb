@@ -58,10 +58,10 @@ module S3find
         if options[:download]
           result.each do |item|
             if item.size > 0
-              puts "downloading #{item.key}"
+              puts "downloading #{item.key} (#{item.size_human})"
               s3.download(item)
             else
-              puts "skipping #{item.key}"
+              puts "skipping    #{item.key}"
             end
           end
         else

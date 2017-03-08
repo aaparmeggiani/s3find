@@ -14,10 +14,14 @@ module S3find
       @key.split('/')[-1]
     end
     
+    def size_human
+      number_to_human_size(@size)
+    end
+
     def to_s
       [ 
         @modified.strftime('%F %T'), 
-        number_to_human_size(@size).rjust(9),
+        size_human.rjust(9),
         @key
       ].join(' ')
     end
