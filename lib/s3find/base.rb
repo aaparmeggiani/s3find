@@ -1,5 +1,6 @@
 require 'open-uri'
 require 'active_support/core_ext/hash'
+require 'ruby-progressbar'
 
 module S3find
   class Base
@@ -50,12 +51,29 @@ module S3find
 
     def download(item)
       if item.size > 0
-        d = open(@bucket_uri + item.key)
-        IO.copy_stream(d, "./#{item.filename}")
+        pbar = SafeProgressBar.new(title: item.filename, total: nil, format: '%t: |%B| %p%% (%e )')   
+        open(@bucket_uri + item.key, 
+             content_length_proc: ->(bytes) { pbar.total = bytes }, 
+             progress_proc: ->(bytes) { pbar.progress = bytes }) do |io| 
+          IO.copy_stream(io, "./#{item.filename}")
+        end
       end
     end
 
+
     private
+
+    class SafeProgressBar < ProgressBar::Base
+       def progress=(new_progress)
+         self.total = new_progress if total <= new_progress
+         super
+       end
+ 
+       def total=(new_total)
+         super if new_total && new_total > 0
+       end
+    end
+ 
     def endpoint(resource)
       return resource                     if resource.start_with? 'http'
       return resource.gsub('file://','')  if resource.start_with? 'file://'
