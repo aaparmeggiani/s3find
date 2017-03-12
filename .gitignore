@@ -1,5 +1,6 @@
 *.gem
 /.bundle/
+/.vscode/
 /Gemfile.lock
 /spec/reports/
 /tmp/
