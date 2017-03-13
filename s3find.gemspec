@@ -12,6 +12,7 @@ Gem::Specification.new do |spec|
   spec.summary       = "s3find public buckets"
   spec.description   = "A 'find' for S3 public buckets"
   spec.homepage      = "https://github.com/aaparmeggiani/s3find"
+  spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
